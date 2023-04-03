@@ -6,6 +6,7 @@ import os
 import glob
 
 import pytorch_lightning as pl
+from pytorch_lightning.callbacks.stochastic_weight_avg import StochasticWeightAveraging
 
 from models.seq2seq import Seq2SeqModule
 from models.vae import VqVaeModule
@@ -203,7 +204,7 @@ def main():
     gpus=0 if device.type == 'cpu' else torch.cuda.device_count(),
     accelerator='dp',
     profiler='simple',
-    callbacks=[checkpoint_callback, lr_monitor],
+    callbacks=[StochasticWeightAveraging(LEARNING_RATE), checkpoint_callback, lr_monitor],
     max_epochs=EPOCHS,
     max_steps=MAX_TRAINING_STEPS,
     log_every_n_steps=max(100, min(25*ACCUMULATE_GRADS, 200)),
@@ -212,7 +213,7 @@ def main():
     auto_scale_batch_size=False,
     auto_lr_find=False,
     accumulate_grad_batches=ACCUMULATE_GRADS,
-    stochastic_weight_avg=True,
+    # stochastic_weight_avg=True,
     gradient_clip_val=1.0, 
     terminate_on_nan=True,
     resume_from_checkpoint=CHECKPOINT
