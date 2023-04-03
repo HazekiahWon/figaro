@@ -201,8 +201,10 @@ def main():
   lr_monitor = pl.callbacks.LearningRateMonitor(logging_interval='step')
 
   trainer = pl.Trainer(
-    gpus=0 if device.type == 'cpu' else torch.cuda.device_count(),
-    accelerator='dp',
+    # gpus=0 if device.type == 'cpu' else torch.cuda.device_count(),
+    strategy="ddp", accelerator="gpu", devices=torch.cuda.device_count(),
+    # strategy='dp',
+    # accelerator='cuda',
     profiler='simple',
     callbacks=[StochasticWeightAveraging(LEARNING_RATE), checkpoint_callback, lr_monitor],
     max_epochs=EPOCHS,
