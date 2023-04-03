@@ -215,7 +215,8 @@ def main():
     accumulate_grad_batches=ACCUMULATE_GRADS,
     # stochastic_weight_avg=True,
     gradient_clip_val=1.0, 
-    terminate_on_nan=True,
+    # terminate_on_nan=True,
+    detect_anomaly=False,
     resume_from_checkpoint=CHECKPOINT
   )
 
